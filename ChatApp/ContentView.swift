@@ -8,8 +8,25 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    @StateObject var viewModel = AuthViewModel()
+    
     var body: some View {
-        Text("Hello")
+        ZStack {
+            if isLoggedIn {
+                HomeView()
+            }else {
+                if viewModel.isLogin {
+                    LoginView(viewModel: viewModel)
+                }else {
+                    RegisterView(viewModel: viewModel)
+                }
+            }
+        }
+        .alert(isPresented: $viewModel.error, content: {
+            Alert(title: Text("Error"), message: Text(viewModel.errorMsg))
+        })
     }
 }
 
